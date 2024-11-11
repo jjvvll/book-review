@@ -3,15 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Book;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $title = $request->input("title");
+
+        $books = Book::when($title, function ($query) use ($title){
+            return $query->title();
+        })->get();
+        return view('book.index', ['books'=> $books]);
     }
 
     /**
