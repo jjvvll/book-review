@@ -17,7 +17,7 @@ class BookController extends Controller
         $books = Book::when($title, function ($query) use ($title){
             return $query->title();
         })->get();
-        return view('book.index', ['books'=> $books]);
+        return view('books.index', ['books'=> $books]);
     }
 
     /**
