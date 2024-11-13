@@ -14,13 +14,18 @@ class BookController extends Controller
     {
         $title = $request->input("title");
 
-        $books = Book::when($title, function ($query) use ($title){
-            return $query->title();
-        })->get();
+        $books = Book::when(
+            $title,
+            function ($query) use ($title){
+                return $query->title($title);
+            }
+        )->get();
         return view('books.index', ['books'=> $books]);
     }
 
     /**
+     * fn($query, $title) => $query->title($title)
+     * function ($query) use ($title){ return $query->title($title);
      * Show the form for creating a new resource.
      */
     public function create()

@@ -8,4 +8,4 @@ Route::get('/', function () {
 });
 
 
-Route::resource('books',BookController::class);
+Route::resource('/books',BookController::class);
