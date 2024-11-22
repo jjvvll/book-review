@@ -15,6 +15,7 @@ class BookController extends Controller
     {
         $title = $request->input("title");
         $filter = $request->input('filter', '');
+        $page = $request->input('page', 1); // Get the current page
 
 
         $books = Book::when(
@@ -28,14 +29,18 @@ class BookController extends Controller
             'popular_last_6months' => $books->PopularLast6Months(),
             'highest_rated_last_month' => $books->HighestRatedLastMonth(),
             'highest_rated_last_6months' => $books->HighestRatedLast6Months(),
-            default =>$books->latest()
+            default =>$books->latest()->withAvgRating()->WithReviewsCount()
         };
+
 
        // $books = $books->get();
        //$books = Cache::remember('', 3600, fn() => $books->get);
 
-       $cacheKey = 'books:' . $filter .':' . $title;
-        $books = cache()->remember($cacheKey , 3600, fn() => $books->get());
+       $cacheKey = 'books:' . $filter .':' . $title. ':page:' . $page;
+        $books = cache()->remember(
+            $cacheKey ,
+            3600,
+            fn() => $books->paginate(6));
 
         // $books = cache()->remember($cacheKey , 3600, function()use($books){
         //    // dd('not from cache');
@@ -67,13 +72,17 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(int $id)
     {
-        $cacheKey = 'book:'. $book->id;
+        $cacheKey = 'book:'. $id;
 
-        $book = cache()->remember($cacheKey,3600, fn() => $book->load([
+        $book = cache()->remember(
+            $cacheKey,
+            3600,
+            fn() => Book::with([
             'reviews' => fn ($query) => $query->latest()
-        ]));
+        ])->withAvgRating()->WithReviewsCount()->findOrFail($id)
+        );
 
 
 
@@ -105,3 +114,21 @@ class BookController extends Controller
         //
     }
 }
+
+
+// public function show(Book $book)
+// {
+//     $cacheKey = 'book:'. $book->id;
+
+//     $book = cache()->remember(
+//         $cacheKey,
+//         3600,
+//         fn() => $book->load([
+//         'reviews' => fn ($query) => $query->latest()
+//     ]));
+
+
+
+//     return view('books.show', ['book'=> $book]);
+
+// }
