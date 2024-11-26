@@ -3,5 +3,5 @@
         {{ $i <= round($rating) ? '★' : '☆' }}
     @endfor
 @else
-    No Rating yet
+    No Rating yet...
 @endif
