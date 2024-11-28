@@ -1,5 +1,11 @@
 @extends('layout.app')
 
+@if(session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+
 @section('content')
   <div class="mb-4">
     <h1 class="mb-2 text-2xl">{{ $book->title }}</h1>
@@ -50,4 +56,7 @@
       @endforelse
     </ul>
   </div>
+
+
+
 @endsection

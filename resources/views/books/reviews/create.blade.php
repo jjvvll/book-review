@@ -3,10 +3,10 @@
 @section('content')
     <h1 class ="mb-10 text-2-x1">Add Review for {{$book->title}}</h1>
 
-    <form action="POST" action="{{ route('books.reviews.store', $book) }}">
+    <form method="POST" action="{{ route('books.reviews.store', $book) }}">
         @csrf
         <label for="review">Review</label>
-        <textarea name="" id="reviews" required class="input mb-4"></textarea>
+        <textarea name="review" id="review" required class="input mb-4"></textarea>
 
         <label for="rating">Rating</label>
 

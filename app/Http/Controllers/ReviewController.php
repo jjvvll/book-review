@@ -30,12 +30,13 @@ class ReviewController extends Controller
     {
         $data = $request->validate([
             'review' => 'required|min:15',
-            'rating' => 'required|mins:1|max:5|integer'
+            'rating' => 'required|min:1|max:5|integer'
         ]);
 
         $book->reviews()->create($data);
 
-        return redirect()->route('books.show', $book);
+        return redirect()->route('books.show', $book)
+         ->with('success', 'Your review has been submitted successfully!');
     }
 
     /**
